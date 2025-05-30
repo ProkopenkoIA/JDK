@@ -1,4 +1,4 @@
-package Log;
+package server.repository;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,43 +6,36 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Logger {
-    private final String logFilePath;
+public class Storage implements Repository{
+    private String logFilePath;
 
-    public Logger(String logFileName) {
-        if (logFileName == null) logFileName = "";
-        logFilePath = "log_" + logFileName + ".log";
+    public Storage(String log_path){
+        this.logFilePath = log_path;
     }
 
-    /**
-     * Сохранение сообщения в файл логов
-     * @param message строка для сохранения в файл Логов
-     */
-    public void saveLogToFile(String message) {
+    @Override
+    public void saveLogToFile(String text) {
         try {
             // Проверяем наличие файла лога и создаем его, если он не существует
             if (!Files.exists(Paths.get(logFilePath))) {
                 Files.createFile(Path.of(logFilePath));
             }
-            String formattedMessage =  message + "\n";
 
-            // Открываем файл лога для записи (режим 'append' - дозапись)
+            String formattedMessage =  text + "\n";
+
             try (FileWriter writer = new FileWriter(logFilePath, true)) {
                 writer.write(formattedMessage);
             }
         } catch (IOException e) {
             System.out.println("Ошибка ввода-вывода при записи в файл лога: " + e.getMessage());
         }
+
     }
 
-    // Получает текст из лог-файла
+    @Override
     public String getLogFromFile() {
         try {
             Path path = Path.of(logFilePath);
@@ -58,5 +51,10 @@ public class Logger {
             System.out.println("I/O error when reading the log file: " + e.getMessage());
             return "";
         }
+    }
+
+    @Override
+    public String getHistory() {
+        return getLogFromFile();
     }
 }
