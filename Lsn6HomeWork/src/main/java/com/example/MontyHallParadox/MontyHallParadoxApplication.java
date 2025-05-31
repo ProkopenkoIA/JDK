@@ -52,12 +52,6 @@ public class MontyHallParadoxApplication {
 		System.out.println("\nСтатистика выигрышей для игрока, меняющего свой выбор:");
 		System.out.println("Количество побед: " + win2 + " раз из " + games + " попыток.");
 
-
-
-
-
-
-
 	}
 
 	private static void trial(int numRound) {
